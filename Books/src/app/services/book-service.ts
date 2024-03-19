@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {map, Observable} from "rxjs";
+import {Observable} from "rxjs";
 import {Book} from "../models/book.model";
 import {HttpClient} from "@angular/common/http";
 

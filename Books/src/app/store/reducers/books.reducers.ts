@@ -1,4 +1,4 @@
-import {createReducer, on, State} from "@ngrx/store";
+import {createReducer, on} from "@ngrx/store";
 import * as BooksApiActions from '../actions/books-api.actions'
 import {Book} from "../../models/book.model";
 

@@ -1,0 +1,52 @@
+<div class="container">
+  <!-- app.component.html -->
+
+  <br>
+  <h1>Gestione Libri</h1>
+  <br>
+
+  <button class="btn btn-primary" (click)="onFlagCreate()">Aggiungi Libro</button>
+  <br><br>
+
+  <table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+      <th>ISBN</th>
+      <th>Titolo</th>
+      <th>Autore</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let book of (books$ | async)">
+      <td>{{ book.ISBN }}</td>
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="flagCreate" class="container mt-3">
+      <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input type="text" id="isbn" class="form-control" placeholder="ISBN" [(ngModel)]="newBook.ISBN" required>
+      </div>
+      <div class="form-group">
+        <label for="title">Titolo</label>
+        <input type="text" id="title" class="form-control" placeholder="Titolo" [(ngModel)]="newBook.title" required>
+      </div>
+      <div class="form-group">
+        <label for="author">Autore</label>
+        <input type="text" id="author" class="form-control" placeholder="Autore" [(ngModel)]="newBook.author" required>
+      </div>
+      <div class="form-group">
+        <label for="genre">Genere</label>
+        <input type="text" id="genre" class="form-control" placeholder="Genere" [(ngModel)]="newBook.genre" required>
+      </div>
+      <div class="form-group">
+        <label for="publishedYear">Anno di pubblicazione</label>
+        <input type="number" id="publishedYear" class="form-control" placeholder="Anno di pubblicazione" [(ngModel)]="newBook.publishedYear" required>
+      </div>
+      <button class="btn btn-primary" (click)="onCreateBook()">Aggiungi</button>
+  </div>
+
+</div>

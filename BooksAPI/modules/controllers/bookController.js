@@ -17,7 +17,7 @@ async function getBookController(req, res) {
 
         const result = await bookModel.findOne({ ISBN:req.query.ISBN });
 
-        if (result.length !== 0) {
+        if (result !== null) {
             res.send(result);
         } else {
             res.sendStatus(404);
@@ -67,7 +67,7 @@ async function postBookController(req, res) {
 
 async function putBookController(req, res) {
     try {
-            const checkBook = await bookModel.findOne({ ISBN:req.query.ISBN });
+            const checkBook = await bookModel.findOne({ ISBN: req.body.ISBN });
 
             if(checkBook != null) {
 
@@ -93,8 +93,8 @@ async function putBookController(req, res) {
                 updateData.publishedYear = req.body.publishedYear;
                 }
         
-                await bookModel.updateOne({ ISBN: req.query.ISBN }, updateData);
-                res.sendStatus(200);
+                const updatedData = await bookModel.updateOne({ ISBN: req.body.ISBN }, updateData, { new: true });
+                res.send(updatedData);
 
             } else {
                 res.sendStatus(404);
@@ -114,7 +114,7 @@ async function deleteBookController(req, res) {
             const result = await bookModel.findOneAndDelete({ ISBN:req.query.ISBN });
   
             if (result) {
-              res.sendStatus(200);
+              res.send(req.query.isbn);
             } else {
               res.sendStatus(404);
             }

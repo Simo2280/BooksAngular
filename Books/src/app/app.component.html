@@ -1,5 +1,4 @@
 <div class="container">
-  <!-- app.component.html -->
 
   <br>
   <h1>Gestione Libri</h1>
@@ -8,45 +7,96 @@
   <button class="btn btn-primary" (click)="onFlagCreate()">Aggiungi Libro</button>
   <br><br>
 
-  <table class="table table-striped">
+  <table class="table table-hover">
     <thead class="thead-dark">
     <tr>
       <th>ISBN</th>
       <th>Titolo</th>
       <th>Autore</th>
+      <th></th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let book of (books$ | async)">
-      <td>{{ book.ISBN }}</td>
-      <td>{{ book.title }}</td>
+    <tr *ngFor="let book of (books$ | async)" class="table-active">
+      <td (click)="onGetBook(book.ISBN)">{{ book.ISBN }}</td>
+      <td (click)="onGetBook(book.ISBN)">{{ book.title }}</td>
       <td>{{ book.author }}</td>
+      <td><button class="btn btn-primary" (click)="onFlagUpdateTrue(book)">Modifica</button></td>
+      <td (click)="onDeleteBook(book.ISBN)">X</td>
     </tr>
     </tbody>
   </table>
 
-  <div *ngIf="flagCreate" class="container mt-3">
-      <div class="form-group">
+  <br>
+
+  <div *ngIf="flagUpdate" class="container mt-3">
+    <div class="card">
+      <div class="card-header">
+        <div style="display: flex; justify-content: flex-end;">
+          <button type="button" class="close float-right" aria-label="Close" (click)="onFlagUpdateFalse()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <h3 class="card-title"  style="padding-top: 8px">Modifica libro:</h3>
+      </div>
+      <div class="card-body">
+        <br>
         <label for="isbn">ISBN</label>
-        <input type="text" id="isbn" class="form-control" placeholder="ISBN" [(ngModel)]="newBook.ISBN" required>
-      </div>
-      <div class="form-group">
+        <input type="text" id="isbn-edit" class="form-control" placeholder="ISBN" [(ngModel)]="editBook.ISBN" disabled>
         <label for="title">Titolo</label>
-        <input type="text" id="title" class="form-control" placeholder="Titolo" [(ngModel)]="newBook.title" required>
-      </div>
-      <div class="form-group">
+        <input type="text" id="title-edit" class="form-control" placeholder="Titolo" [(ngModel)]="editBook.title">
         <label for="author">Autore</label>
-        <input type="text" id="author" class="form-control" placeholder="Autore" [(ngModel)]="newBook.author" required>
-      </div>
-      <div class="form-group">
+        <input type="text" id="author-edit" class="form-control" placeholder="Autore" [(ngModel)]="editBook.author">
         <label for="genre">Genere</label>
-        <input type="text" id="genre" class="form-control" placeholder="Genere" [(ngModel)]="newBook.genre" required>
-      </div>
-      <div class="form-group">
+        <input type="text" id="genre-edit" class="form-control" placeholder="Genere" [(ngModel)]="editBook.genre">
         <label for="publishedYear">Anno di pubblicazione</label>
-        <input type="number" id="publishedYear" class="form-control" placeholder="Anno di pubblicazione" [(ngModel)]="newBook.publishedYear" required>
+        <input type="number" id="publishedYear-edit" class="form-control" placeholder="Anno di pubblicazione" [(ngModel)]="editBook.publishedYear" required>
+        <br>
+        <button class="btn btn-primary" (click)="onUpdateBook()">Modifica</button>
       </div>
-      <button class="btn btn-primary" (click)="onCreateBook()">Aggiungi</button>
+    </div>
+  </div>
+
+  <br>
+
+  <div *ngIf="flagActiveBook && (activeBook$ | async) as activeBook" class="card">
+    <div class="card-header">
+      <div style="display: flex; justify-content: flex-end;">
+        <button type="button" class="close float-right" aria-label="Close" (click)="onFlagActive()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <h5 class="card-title"  style="padding-top: 8px">{{ activeBook.title }}</h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">ISBN: {{ activeBook.ISBN }}</p>
+      <p class="card-text">Autore: {{ activeBook.author }}</p>
+      <p class="card-text">Genere: {{ activeBook.genre }}</p>
+      <p class="card-text">Anno: {{ activeBook.publishedYear }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="flagCreate" class="container mt-3">
+      <div class="card">
+        <div class="card-header">
+          <h3>Aggiungi libro:</h3>
+        </div>
+        <div class="card-body">
+          <label for="isbn">ISBN</label>
+          <input type="text" id="isbn" class="form-control" placeholder="ISBN" [(ngModel)]="newBook.ISBN" required>
+          <label for="title">Titolo</label>
+          <input type="text" id="title" class="form-control" placeholder="Titolo" [(ngModel)]="newBook.title" required>
+          <label for="author">Autore</label>
+          <input type="text" id="author" class="form-control" placeholder="Autore" [(ngModel)]="newBook.author" required>
+          <label for="genre">Genere</label>
+          <input type="text" id="genre" class="form-control" placeholder="Genere" [(ngModel)]="newBook.genre" required>
+          <label for="publishedYear">Anno di pubblicazione</label>
+          <input type="number" id="publishedYear" class="form-control" placeholder="Anno di pubblicazione" [(ngModel)]="newBook.publishedYear" required>
+          <br>
+          <button class="btn btn-primary" (click)="onCreateBook()">Aggiungi</button>
+        </div>
+      </div>
   </div>
 
 </div>

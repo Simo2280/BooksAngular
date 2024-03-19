@@ -2,7 +2,7 @@ exports.books = (app) => {
 
     const bookController = require('../controllers/bookController');
   
-    app.get("/book", bookController.getBooksController);
+    app.get("/books", bookController.getBooksController);
 
     app.get("/book", bookController.getBookController);
   

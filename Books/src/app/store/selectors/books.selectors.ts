@@ -9,3 +9,9 @@ export const selectAllBooks =
     selectBooksState,
     fromBooks.selectAll
   )
+
+export const selectActiveBook =
+  createSelector(
+    selectBooksState,
+    fromBooks.selectActiveBook
+  )

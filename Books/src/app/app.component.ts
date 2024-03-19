@@ -1,14 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {Book} from "./models/book.model";
-import {BookService} from "./services/book-service";
 import {Store} from "@ngrx/store";
 import * as BooksActions from './store/actions/books.actions'
-import * as BooksApiActions from './store/actions/books-api.actions'
 import {Observable} from "rxjs";
 import { selectAllBooks } from './store/selectors/books.selectors';
 import {AsyncPipe, CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
+import {selectActiveBook} from "./store/selectors/books.selectors";
 
 
 @Component({
@@ -20,15 +19,19 @@ import {FormsModule} from "@angular/forms";
 })
 export class AppComponent implements OnInit {
   books$: Observable<Book[]>
-  newBook: Book = { ISBN: '', title: '', author: '', genre: '', publishedYear: 0 };
+  activeBook$: Observable<Book | null>
+  newBook: Book = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 };
+  editBook: Book = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 };
+  flagActiveBook: boolean = false;
   flagCreate: boolean = false;
+  flagUpdate: boolean = false;
 
-  constructor(private booksService: BookService, private store: Store) {
+  constructor(private store: Store) {
     this.books$ = store.select(selectAllBooks);
+    this.activeBook$ = store.select(selectActiveBook);
   }
 
   ngOnInit() {
-    //this.getBooks();
     this.store.dispatch(BooksActions.loadBooks());
   }
 
@@ -36,15 +39,35 @@ export class AppComponent implements OnInit {
     this.flagCreate = !this.flagCreate;
   }
 
-  getBooks() {
-    this.booksService.getBooks().subscribe((books) => {
-      this.store.dispatch(BooksApiActions.booksLoaded({ books } ));
-      console.log(books)
-    });
+  onFlagActive() {
+    this.flagActiveBook = false;
+  }
+
+  onFlagUpdateTrue(book: Book) {
+    this.editBook.ISBN = book.ISBN;
+    this.flagUpdate = true;
+  }
+
+  onFlagUpdateFalse() {
+    this.flagUpdate = false;
+  }
+
+  onGetBook(isbnActive: string) {
+    this.store.dispatch(BooksActions.loadActiveBook({ ISBN: isbnActive }));
+    this.flagActiveBook = true;
   }
 
   onCreateBook() {
-    this.store.dispatch(BooksActions.createBook({newBook: this.newBook}));
+    this.store.dispatch(BooksActions.createBook({ newBook: this.newBook }));
+    this.newBook = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 };
+  }
+
+  onUpdateBook() {
+    this.store.dispatch(BooksActions.updateBook({ editBook: this.editBook }))
+  }
+
+  onDeleteBook(isbn: string) {
+    this.store.dispatch(BooksActions.deleteBook({ isbn: isbn }));
   }
 
 }

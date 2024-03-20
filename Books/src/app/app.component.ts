@@ -6,22 +6,42 @@ import * as BooksActions from './store/actions/books.actions'
 import {Observable} from "rxjs";
 import { selectAllBooks } from './store/selectors/books.selectors';
 import {AsyncPipe, CommonModule} from "@angular/common";
-import {FormsModule} from "@angular/forms";
 import {selectActiveBook} from "./store/selectors/books.selectors";
-
+import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MatButton, MatIconButton} from "@angular/material/button";
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef,
+  MatTable
+} from "@angular/material/table";
+import {MatCard, MatCardContent, MatCardHeader} from "@angular/material/card";
+import {MatIcon} from "@angular/material/icon";
+import {MatFormField} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {MatToolbar} from "@angular/material/toolbar";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AsyncPipe, CommonModule, FormsModule],
+  imports: [RouterOutlet, AsyncPipe, CommonModule, ReactiveFormsModule, FormsModule, MatButton, MatTable, MatColumnDef, MatHeaderCell, MatCell, MatHeaderCellDef, MatCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatCard, MatCardHeader, MatIcon, MatIconButton, MatCardContent, MatFormField, MatInput, MatToolbar],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   books$: Observable<Book[]>
   activeBook$: Observable<Book | null>
-  newBook: Book = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 };
-  editBook: Book = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 };
+  bookForm = new FormGroup({
+    ISBN: new FormControl(''),
+    title: new FormControl(''),
+    author: new FormControl(''),
+    genre: new FormControl(''),
+    publishedYear: new FormControl(2000)
+  });
+  columnTable: any[] = ['isbn', 'title', 'author', 'edit', 'delete'];
   flagActiveBook: boolean = false;
   flagCreate: boolean = false;
   flagUpdate: boolean = false;
@@ -44,12 +64,27 @@ export class AppComponent implements OnInit {
   }
 
   onFlagUpdateTrue(book: Book) {
-    this.editBook.ISBN = book.ISBN;
+    this.bookForm.patchValue({
+      ISBN: book.ISBN, title: book.title, author: book.author, genre: book.genre, publishedYear: book.publishedYear
+    })
     this.flagUpdate = true;
   }
 
   onFlagUpdateFalse() {
     this.flagUpdate = false;
+  }
+
+  onFormBook () {
+    const book: Book = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 }
+
+    const formValues = this.bookForm.value;
+    book.ISBN = formValues.ISBN ?? '';
+    book.title = formValues.title ?? '';
+    book.author = formValues.author ?? '';
+    book.genre = formValues.genre ?? '';
+    book.publishedYear = formValues.publishedYear ?? 2000;
+
+    return book;
   }
 
   onGetBook(isbnActive: string) {
@@ -58,13 +93,26 @@ export class AppComponent implements OnInit {
   }
 
   onCreateBook() {
-    this.store.dispatch(BooksActions.createBook({ newBook: this.newBook }));
-    this.newBook = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 };
+    const newBook: Book = this.onFormBook();
+
+    this.store.dispatch(BooksActions.createBook({ newBook: newBook }));
+
+    this.bookForm.patchValue({
+      ISBN: '', title: '', author: '', genre: '', publishedYear: 2000
+    })
   }
 
   onUpdateBook() {
-    this.store.dispatch(BooksActions.updateBook({ editBook: this.editBook }))
+    const editBook: Book = this.onFormBook();
+
+    this.store.dispatch(BooksActions.updateBook({ editBook: editBook }));
+
+    this.bookForm.patchValue({
+      ISBN: '', title: '', author: '', genre: '', publishedYear: 2000
+    })
+    this.onFlagUpdateFalse();
   }
+
 
   onDeleteBook(isbn: string) {
     this.store.dispatch(BooksActions.deleteBook({ isbn: isbn }));

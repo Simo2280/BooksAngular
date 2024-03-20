@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import {catchError, concatMap, exhaustMap, map, of, switchMap} from "rxjs";
+import {catchError, concatMap, map, of, switchMap} from "rxjs";
 import { BookService } from "../../services/book-service";
 import * as BooksActions from "../actions/books.actions";
 import * as BooksApiActions from "../actions/books-api.actions";
@@ -14,7 +14,7 @@ export class BooksEffects {
   loadBooks$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BooksActions.loadBooks),
-      exhaustMap(() => {
+      switchMap(() => {
         return this.bookService
           .getBooks()
           .pipe(map((books) => BooksApiActions.booksLoaded({ books })));
@@ -26,7 +26,7 @@ export class BooksEffects {
   loadActiveBook$ = createEffect(() => {
     return this.actions$.pipe(
       ofType(BooksActions.loadActiveBook),
-      exhaustMap((action) => {
+      switchMap((action) => {
         return this.bookService
           .getBook(action.ISBN)
           .pipe(map((book) => BooksApiActions.activeBookLoaded({ activeBook: book })));

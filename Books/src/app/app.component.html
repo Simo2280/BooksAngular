@@ -77,18 +77,31 @@
 
   <div *ngIf="flagActiveBook && (activeBook$ | async) as activeBook" class="card">
     <mat-card>
+
       <mat-card-header>
         <h2 style="color: white;">{{activeBook.title}}</h2>
         <button mat-icon-button style="margin-left: auto;" (click)="onFlagActive()">
           <mat-icon aria-label="Close" style="color: white;">close</mat-icon>
         </button>
       </mat-card-header>
-      <mat-card-content style="color: white;">
-        <p>ISBN: {{ activeBook.ISBN }}</p>
-        <p>Autore: {{ activeBook.author }}</p>
-        <p>Genere: {{ activeBook.genre }}</p>
-        <p>Anno: {{ activeBook.publishedYear }}</p>
+      <mat-card-content style="color: white; display: flex; align-items: center; font-size: 18px;">
+        <div style="flex: 0 0 auto; margin-right: 16px; width: 250px; height: 400px; background-color: #333; display: flex; justify-content: center; align-items: center;">
+
+          <img *ngIf="loadCover" ngSrc="assets/spinner.gif" alt="loading" width="75" height="75" />
+
+          <img ngSrc="https://covers.openlibrary.org/b/ISBN/{{activeBook.ISBN}}-M.jpg" width="250" height="400" priority alt="img" (load)="onImageLoad()" [hidden]="loadCover" />
+
+        </div>
+
+
+        <div style="flex: 1 1 auto;">
+          <p style="font-size: 18px;">ISBN: {{ activeBook?.ISBN }}</p>
+          <p style="font-size: 18px;">Autore: {{ activeBook?.author }}</p>
+          <p style="font-size: 18px;">Genere: {{ activeBook?.genre }}</p>
+          <p style="font-size: 18px;">Anno: {{ activeBook?.publishedYear }}</p>
+        </div>
       </mat-card-content>
+
     </mat-card>
   </div>
 

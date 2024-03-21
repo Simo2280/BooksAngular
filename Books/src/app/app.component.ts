@@ -5,7 +5,7 @@ import {Store} from "@ngrx/store";
 import * as BooksActions from './store/actions/books.actions'
 import {Observable} from "rxjs";
 import { selectAllBooks } from './store/selectors/books.selectors';
-import {AsyncPipe, CommonModule} from "@angular/common";
+import {AsyncPipe, CommonModule, NgOptimizedImage} from "@angular/common";
 import {selectActiveBook} from "./store/selectors/books.selectors";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButton, MatIconButton} from "@angular/material/button";
@@ -23,11 +23,12 @@ import {MatIcon} from "@angular/material/icon";
 import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatToolbar} from "@angular/material/toolbar";
+import {MatProgressSpinner} from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, AsyncPipe, CommonModule, ReactiveFormsModule, FormsModule, MatButton, MatTable, MatColumnDef, MatHeaderCell, MatCell, MatHeaderCellDef, MatCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatCard, MatCardHeader, MatIcon, MatIconButton, MatCardContent, MatFormField, MatInput, MatToolbar],
+  imports: [RouterOutlet, AsyncPipe, CommonModule, ReactiveFormsModule, FormsModule, MatButton, MatTable, MatColumnDef, MatHeaderCell, MatCell, MatHeaderCellDef, MatCellDef, MatHeaderRow, MatHeaderRowDef, MatRow, MatRowDef, MatCard, MatCardHeader, MatIcon, MatIconButton, MatCardContent, MatFormField, MatInput, MatToolbar, NgOptimizedImage, MatProgressSpinner],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -45,6 +46,7 @@ export class AppComponent implements OnInit {
   flagActiveBook: boolean = false;
   flagCreate: boolean = false;
   flagUpdate: boolean = false;
+  loadCover: boolean = false;
 
   constructor(private store: Store) {
     this.books$ = store.select(selectAllBooks);
@@ -74,6 +76,16 @@ export class AppComponent implements OnInit {
     this.flagUpdate = false;
   }
 
+  getBookCoverUrl(isbn: string): string {
+    console.log("url")
+    return `https://covers.openlibrary.org/b/ISBN/${isbn}-M.jpg`;
+  }
+
+  onImageLoad() {
+    console.log("loaded")
+    this.loadCover = false;
+  }
+
   onFormBook () {
     const book: Book = { ISBN: '', title: '', author: '', genre: '', publishedYear: 2000 }
 
@@ -89,6 +101,7 @@ export class AppComponent implements OnInit {
 
   onGetBook(isbnActive: string) {
     this.store.dispatch(BooksActions.loadActiveBook({ ISBN: isbnActive }));
+    this.loadCover = true;
     this.flagActiveBook = true;
   }
 

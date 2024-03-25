@@ -1,0 +1,37 @@
+<div class="container">
+  <div class="center-container" style="padding-top: 30px; text-align: center;">
+    <mat-card  class="login-card">
+      <mat-card-header>
+        <div  style="padding: 20px;">
+          <span style="color: white; font-size: 30px; font-weight: bold;">Login</span>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <form (ngSubmit)="onSubmitForm()">
+          <div class="mb-3">
+            <mat-form-field appearance="fill">
+              Email
+              <input matInput type="text" id="email" name="email" [(ngModel)]="email" required>
+            </mat-form-field>
+          </div>
+          <div class="mb-3">
+            <mat-form-field appearance="fill">
+              Password
+              <input matInput type="password" id="password" name="password" [(ngModel)]="password" required>
+            </mat-form-field>
+          </div>
+          <div class="mb-3">
+            <mat-form-field appearance="fill">
+              Role
+              <mat-select name="role" [(ngModel)]="role" required>
+                <mat-option value="user">User</mat-option>
+                <mat-option value="admin">Admin</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <button mat-raised-button type="submit" class="btn btn-primary">Login</button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

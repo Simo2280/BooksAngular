@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.center-container {
+  max-width: 400px; /* Imposta la larghezza massima del contenitore centrale */
+  width: 100%;
+}
+
+.login-card {
+  max-width: 400px;
+  color: white
+}
+
+.mat-mdc-card-header {
+  display: flex;
+  padding: 16px;
+  justify-content: center;
+  align-items: center;
+}

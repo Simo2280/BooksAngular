@@ -1,7 +1,10 @@
 <div class="container" style="padding-bottom: 30px;">
 
   <div style="padding-top: 30px; text-align: center;">
-    <span style="color: white; font-size: 30px; font-weight: bold;" >Gestione libri</span>
+    <span style="color: white; font-size: 30px; font-weight: bold;">Gestione libri</span>
+  </div>
+  <div style="text-align: right;">
+    <button mat-raised-button color="primary" (click)="onLogout()">Logout</button>
   </div>
   <div style="padding: 20px; text-align: center;">
     <button mat-raised-button color="primary" (click)="onFlagCreate()">Aggiungi Libro</button>
@@ -87,7 +90,7 @@
       <mat-card-content style="color: white; display: flex; align-items: center; font-size: 18px;">
         <div style="flex: 0 0 auto; margin-right: 16px; width: 250px; height: 400px; background-color: #333; display: flex; justify-content: center; align-items: center;">
 
-          <img *ngIf="loadCover" ngSrc="assets/spinner.gif" alt="loading" width="75" height="75" />
+          <img *ngIf="loadCover" ngSrc="../../../assets/spinner.gif" alt="loading" width="75" height="75" />
 
           <img ngSrc="https://covers.openlibrary.org/b/ISBN/{{activeBook.ISBN}}-M.jpg" width="250" height="400" priority alt="img" (load)="onImageLoad()" [hidden]="loadCover" />
 

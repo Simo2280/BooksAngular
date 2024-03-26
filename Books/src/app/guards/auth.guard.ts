@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import {TokenService} from "../../services/token-service"; // Importa il servizio TokenService
+import {TokenService} from "../services/token-service"; // Importa il servizio TokenService
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private tokenService: TokenService, private router: Router) {}
+  constructor(private router: Router, private tokenService: TokenService) {}
 
   canActivate(): boolean {
-    const token = this.tokenService.getToken();
-    if (!token || this.tokenService.isTokenExpired()) {
+    const token = sessionStorage.getItem('token');
+    if (!token || this.tokenService.isTokenExpired(token)) {
       this.router.navigate(['/login']);
       return false;
     }

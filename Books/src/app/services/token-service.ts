@@ -1,28 +1,49 @@
 import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
+import {map, Observable, throwError} from "rxjs";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
 
-  constructor(private cookieService: CookieService) { }
+  constructor(private cookieService: CookieService, private http: HttpClient) { }
 
-  saveToken(token: any) {
-    console.log(token.accessToken)
-    this.cookieService.set('token', token.accessToken);
+  login(email: string, password: string, role: string): Observable<string> {
+    const headers = new HttpHeaders()
+      .set('email', email)
+      .set('password', password)
+      .set('role', role);
+
+    return this.http.get<any>('http://localhost:4000/login', { headers }).pipe(
+      map(response => response.accessToken)
+    );
   }
 
-  getToken(): string | null {
-    return this.cookieService.get('token');
+  logout(): Observable<Object> {
+    const token = sessionStorage.getItem("token");
+
+    if (token) {
+      const headers = new HttpHeaders()
+        .set('authorization', token);
+
+      return this.http.get("http://localhost:4000/logout", { headers: headers });
+    } else {
+      return throwError("Nessun token presente in sessionStorage");
+    }
+  }
+
+  refresh(): Observable<Object> {
+
+    return this.http.get("http://localhost:4000/refresh");
   }
 
   clearToken() {
     this.cookieService.delete('token');
   }
 
-  isTokenExpired(): boolean {
-    const token = this.getToken();
+  isTokenExpired(token: string): boolean {
     if (!token) {
       return true;
     }

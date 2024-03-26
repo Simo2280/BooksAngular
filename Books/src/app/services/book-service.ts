@@ -9,18 +9,9 @@ import {TokenService} from "./token-service";
 export class BookService {
   constructor(private http: HttpClient, private tokenService: TokenService) {}
 
-  login(email: string, password: string, role: string): Observable<Object> {
-    const headers = new HttpHeaders()
-      .set('email', email)
-      .set('password', password)
-      .set('role', role);
-
-    return this.http.get("http://localhost:4000/login", { headers: headers });
-  }
-
   getBooks(): Observable<Book[]> {
 
-    const token = this.tokenService.getToken();
+    const token = sessionStorage.getItem("token");
     const headers = new HttpHeaders({
       'authorization': `${token}`
     });
@@ -30,7 +21,7 @@ export class BookService {
   }
 
   getBook(ISBN: string): Observable<Book> {
-    const token = this.tokenService.getToken();
+    const token = sessionStorage.getItem("token");
     const headers = new HttpHeaders({
       'authorization': `${token}`
     });
@@ -40,7 +31,7 @@ export class BookService {
   }
 
   createBook(book: Book) {
-    const token = this.tokenService.getToken();
+    const token = sessionStorage.getItem("token");
     const headers = new HttpHeaders({
       'authorization': `${token}`
     });
@@ -50,7 +41,7 @@ export class BookService {
   }
 
   updateBook(book: Book) {
-    const token = this.tokenService.getToken();
+    const token = sessionStorage.getItem("token");
     const headers = new HttpHeaders({
       'authorization': `${token}`
     });
@@ -60,7 +51,7 @@ export class BookService {
   }
 
   deleteBook(ISBN: string) {
-    const token = this.tokenService.getToken();
+    const token = sessionStorage.getItem("token");
     const headers = new HttpHeaders({
       'authorization': `${token}`
     });

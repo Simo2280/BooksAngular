@@ -84,6 +84,7 @@ async function logoutController(req, res) {
 async function refreshController(req, res) {
     try {
 
+        console.log("refresh: " + req.cookies.refreshToken)
         const refreshToken = req.cookies.refreshToken;
   
         if (!refreshToken) {

@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import {Book} from "../models/book.model";
+import {Router, RouterOutlet} from '@angular/router';
+import {Book} from "../../models/book.model";
 import {Store} from "@ngrx/store";
-import * as BooksActions from '../store/actions/books.actions'
+import * as BooksActions from '../../store/actions/books.actions'
 import {Observable} from "rxjs";
-import { selectAllBooks } from '../store/selectors/books.selectors';
+import { selectAllBooks } from '../../store/selectors/books.selectors';
 import {AsyncPipe, CommonModule, NgOptimizedImage} from "@angular/common";
-import {selectActiveBook} from "../store/selectors/books.selectors";
+import {selectActiveBook} from "../../store/selectors/books.selectors";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {
@@ -24,6 +24,7 @@ import {MatFormField} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatProgressSpinner} from "@angular/material/progress-spinner";
+import {TokenService} from "../../services/token-service";
 
 @Component({
   selector: 'app-dashboard',
@@ -48,7 +49,7 @@ export class Dashboard implements OnInit {
   flagUpdate: boolean = false;
   loadCover: boolean = false;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, private tokenService: TokenService, private router: Router) {
     this.books$ = store.select(selectAllBooks);
     this.activeBook$ = store.select(selectActiveBook);
   }
@@ -126,9 +127,14 @@ export class Dashboard implements OnInit {
     this.onFlagUpdateFalse();
   }
 
-
   onDeleteBook(isbn: string) {
     this.store.dispatch(BooksActions.deleteBook({ isbn: isbn }));
+  }
+
+  onLogout() {
+    //todo gestione logout ngrx
+    sessionStorage.clear();
+    this.router.navigate(['/login']);
   }
 
 }

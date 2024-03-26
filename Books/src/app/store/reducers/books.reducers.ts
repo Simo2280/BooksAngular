@@ -5,17 +5,17 @@ import {Book} from "../../models/book.model";
 export interface BooksState {
   collection: Book[],
   activeBook: Book | null;
-  error: string,
+  error: string | null,
 }
 
-export const initialState: BooksState = {
+export const bookInitialState: BooksState = {
   collection: [],
   activeBook: null,
-  error: '',
+  error: null,
 }
 
 export const bookReducer = createReducer(
-  initialState,
+  bookInitialState,
   on(BooksApiActions.booksLoaded, (state, action) => {
     return{
       ...state,
